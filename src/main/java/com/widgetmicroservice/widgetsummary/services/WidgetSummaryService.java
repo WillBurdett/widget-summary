@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WidgetSummaryService {
@@ -19,6 +20,10 @@ public class WidgetSummaryService {
 
     public List<ProcessedWidget> getAllWidgetSummaries() {
         return widgetSummaryRepository.findAll();
+    }
+
+    public Optional<ProcessedWidget> getWidgetSummaryById(Long id) {
+        return widgetSummaryRepository.findById(id);
     }
 
     public void storeProcessedWidget(ProcessedWidget processedWidget) {
