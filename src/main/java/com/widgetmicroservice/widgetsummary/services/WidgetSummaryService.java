@@ -26,11 +26,11 @@ public class WidgetSummaryService {
         return widgetSummaryRepository.findById(id);
     }
 
-    public void storeProcessedWidget(ProcessedWidget processedWidget) {
+    public void createWidgetSummary(ProcessedWidget processedWidget) {
         widgetSummaryRepository.save(processedWidget);
     }
 
-    public void deleteProcessedWidget(Long id) {
+    public void deleteWidgetSummary(Long id) {
         widgetSummaryRepository.deleteById(id);
     }
 }

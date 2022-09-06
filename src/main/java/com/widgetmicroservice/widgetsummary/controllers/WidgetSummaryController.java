@@ -30,12 +30,12 @@ public class WidgetSummaryController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    private void storeProcessedWidget(@RequestBody ProcessedWidget processedWidget){
-        widgetSummaryService.storeProcessedWidget(processedWidget);
+    private void createWidgetSummary(@RequestBody ProcessedWidget processedWidget){
+        widgetSummaryService.createWidgetSummary(processedWidget);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
-    private void storeProcessedWidget(@PathVariable Long id){
-        widgetSummaryService.deleteProcessedWidget(id);
+    private void deleteWidgetSummary(@PathVariable Long id){
+        widgetSummaryService.deleteWidgetSummary(id);
     }
 }
