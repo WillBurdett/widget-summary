@@ -29,4 +29,8 @@ public class WidgetSummaryService {
     public void storeProcessedWidget(ProcessedWidget processedWidget) {
         widgetSummaryRepository.save(processedWidget);
     }
+
+    public void deleteProcessedWidget(Long id) {
+        widgetSummaryRepository.deleteById(id);
+    }
 }

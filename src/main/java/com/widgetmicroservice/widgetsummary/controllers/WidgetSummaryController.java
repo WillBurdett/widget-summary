@@ -33,4 +33,9 @@ public class WidgetSummaryController {
     private void storeProcessedWidget(@RequestBody ProcessedWidget processedWidget){
         widgetSummaryService.storeProcessedWidget(processedWidget);
     }
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
+    private void storeProcessedWidget(@PathVariable Long id){
+        widgetSummaryService.deleteProcessedWidget(id);
+    }
 }
