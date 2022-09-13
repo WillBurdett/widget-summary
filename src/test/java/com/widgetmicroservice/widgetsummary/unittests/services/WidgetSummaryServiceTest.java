@@ -54,9 +54,21 @@ public class WidgetSummaryServiceTest {
 
     @Test
     public void createWidgetSummary() {
+        // given
+        ProcessedWidget expected = new ProcessedWidget(1L, "Bob", "Smith", 20, Gender.MALE, 150.0, 80.0, 1643);
+        // when
+        undertest.createWidgetSummary(expected);
+        // then
+        verify(widgetSummaryRepository, times(1)).save(expected);
     }
 
     @Test
     public void deleteWidgetSummary() {
+        // given
+        Long expectedId = 1L;
+        // when
+        undertest.deleteWidgetSummary(expectedId);
+        // then
+        verify(widgetSummaryRepository, times(1)).deleteById(expectedId);
     }
 }
