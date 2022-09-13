@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
@@ -40,7 +41,15 @@ public class WidgetSummaryServiceTest {
     }
 
     @Test
-    public void getWidgetSummaryById() {
+    public void getWidgetSummaryById_HappyPath() {
+        // given
+        ProcessedWidget expected = new ProcessedWidget(1L, "Bob", "Smith", 20, Gender.MALE, 150.0, 80.0, 1643);
+        when(widgetSummaryRepository.findById(expected.getId())).thenReturn(Optional.of(expected));
+        // when
+        Optional<ProcessedWidget> actual = undertest.getWidgetSummaryById(expected.getId());
+        // then
+        assertThat(actual).isEqualTo(Optional.of(expected));
+        verify(widgetSummaryRepository, times(1)).findById(expected.getId());
     }
 
     @Test
