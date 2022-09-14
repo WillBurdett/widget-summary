@@ -1,5 +1,6 @@
 package com.widgetmicroservice.widgetsummary.services;
 
+import com.widgetmicroservice.widgetsummary.exceptions.WidgetSummaryNotFound;
 import com.widgetmicroservice.widgetsummary.models.ProcessedWidget;
 import com.widgetmicroservice.widgetsummary.repositories.WidgetSummaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,12 @@ public class WidgetSummaryService {
     }
 
     public Optional<ProcessedWidget> getWidgetSummaryById(Long id) {
-        return widgetSummaryRepository.findById(id);
+        Optional <ProcessedWidget> widget = widgetSummaryRepository.findById(id);
+        if (widget.isPresent()){
+            return widget;
+        } else {
+            throw new WidgetSummaryNotFound("widget summary with id " + id + " not found");
+        }
     }
 
     public void createWidgetSummary(ProcessedWidget processedWidget) {

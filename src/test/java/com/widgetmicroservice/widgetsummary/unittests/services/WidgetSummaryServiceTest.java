@@ -1,6 +1,7 @@
 package com.widgetmicroservice.widgetsummary.unittests.services;
 
 import com.widgetmicroservice.widgetsummary.enums.Gender;
+import com.widgetmicroservice.widgetsummary.exceptions.WidgetSummaryNotFound;
 import com.widgetmicroservice.widgetsummary.models.ProcessedWidget;
 import com.widgetmicroservice.widgetsummary.repositories.WidgetSummaryRepository;
 import com.widgetmicroservice.widgetsummary.services.WidgetSummaryService;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 
@@ -40,6 +42,8 @@ public class WidgetSummaryServiceTest {
         verify(widgetSummaryRepository, times(1)).findAll();
     }
 
+
+
     @Test
     public void getWidgetSummaryById_HappyPath() {
         // given
@@ -50,6 +54,20 @@ public class WidgetSummaryServiceTest {
         // then
         assertThat(actual).isEqualTo(Optional.of(expected));
         verify(widgetSummaryRepository, times(1)).findById(expected.getId());
+    }
+
+    @Test
+    public void getWidgetSummaryById_ThrowsWidgetSummaryNotFoundException() {
+        // given
+        Optional <ProcessedWidget> expected = Optional.empty();
+        when(widgetSummaryRepository.findById(1L)).thenReturn(expected);
+        // when
+        assertThatThrownBy(() -> {
+            undertest.getWidgetSummaryById(1L);
+            // then
+        }).isInstanceOf(WidgetSummaryNotFound.class)
+                .hasMessage("widget summary with id 1 not found");
+        verify(widgetSummaryRepository, times(1)).findById(1L);
     }
 
     @Test
