@@ -36,7 +36,12 @@ public class WidgetSummaryService {
         widgetSummaryRepository.save(processedWidget);
     }
 
-    public void deleteWidgetSummary(Long id) {
-        widgetSummaryRepository.deleteById(id);
+    public void deleteWidgetSummaryById(Long id) {
+        Optional <ProcessedWidget> widget = widgetSummaryRepository.findById(id);
+        if (widget.isPresent()){
+            widgetSummaryRepository.deleteById(id);
+        } else {
+            throw new WidgetSummaryNotFound("widget summary with id " + id + " not found");
+        }
     }
 }

@@ -35,7 +35,7 @@ public class WidgetSummaryController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
-    private void deleteWidgetSummary(@PathVariable Long id){
-        widgetSummaryService.deleteWidgetSummary(id);
+    private void deleteWidgetSummaryById(@PathVariable Long id){
+        widgetSummaryService.deleteWidgetSummaryById(id);
     }
 }

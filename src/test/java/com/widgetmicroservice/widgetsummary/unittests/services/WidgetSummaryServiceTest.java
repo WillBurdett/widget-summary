@@ -19,7 +19,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(WidgetSummaryService.class)
 public class WidgetSummaryServiceTest {
@@ -41,8 +40,6 @@ public class WidgetSummaryServiceTest {
         assertThat(actual).isEqualTo(expected);
         verify(widgetSummaryRepository, times(1)).findAll();
     }
-
-
 
     @Test
     public void getWidgetSummaryById_HappyPath() {
@@ -81,12 +78,29 @@ public class WidgetSummaryServiceTest {
     }
 
     @Test
-    public void deleteWidgetSummary() {
+    public void deleteWidgetSummaryById_HappyPath() {
         // given
+        ProcessedWidget expected = new ProcessedWidget(1L, "Bob", "Smith", 20, Gender.MALE, 150.0, 80.0, 1643);
+        when(widgetSummaryRepository.findById(expected.getId())).thenReturn(Optional.of(expected));
         Long expectedId = 1L;
         // when
-        undertest.deleteWidgetSummary(expectedId);
+        undertest.deleteWidgetSummaryById(expectedId);
         // then
         verify(widgetSummaryRepository, times(1)).deleteById(expectedId);
+    }
+
+    @Test
+    public void deleteWidgetSummaryById_ThrowsWidgetSummaryNotFoundException() {
+        // given
+        Optional <ProcessedWidget> expected = Optional.empty();
+        when(widgetSummaryRepository.findById(1L)).thenReturn(expected);
+        // when
+        assertThatThrownBy(() -> {
+            undertest.deleteWidgetSummaryById(1L);
+            // then
+        }).isInstanceOf(WidgetSummaryNotFound.class)
+                .hasMessage("widget summary with id 1 not found");
+        verify(widgetSummaryRepository, times(1)).findById(1L);
+        verify(widgetSummaryRepository, times(0)).deleteById(1L);
     }
 }
