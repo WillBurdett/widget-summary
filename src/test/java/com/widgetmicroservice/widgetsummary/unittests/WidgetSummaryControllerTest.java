@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -58,10 +59,26 @@ public class WidgetSummaryControllerTest {
     }
 
     @Test
-    public void getWidgetSummaryById_HappyPath(){
+    public void getWidgetSummaryById_HappyPath() throws Exception {
         // given
+        long id = 1L;
+        ProcessedWidget expected = new ProcessedWidget(id, "Bob", "Smith", 20, Gender.MALE, 150.0, 80.0, 1643);
+        when(widgetService.getWidgetSummaryById(id)).thenReturn(Optional.of(expected));
+
         // when
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/summary/"+id).contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.firstName", is("Bob")))
+                .andExpect(jsonPath("$.lastName", is("Smith")))
+                .andExpect(jsonPath("$.age", is(20)))
+                .andExpect(jsonPath("$.gender", is("MALE")))
+                .andExpect(jsonPath("$.height", is(150.0)))
+                .andExpect(jsonPath("$.weight", is(80.0)))
+                .andExpect(jsonPath("$.bmr", is(1643)));
         // then
+        verify(widgetService, times(1)).getWidgetSummaryById(id);
     }
 
     @Test
