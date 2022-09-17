@@ -1,14 +1,27 @@
 package com.widgetmicroservice.widgetsummary.unittests;
 
 import com.widgetmicroservice.widgetsummary.controllers.WidgetSummaryController;
+import com.widgetmicroservice.widgetsummary.enums.Gender;
+import com.widgetmicroservice.widgetsummary.models.ProcessedWidget;
 import com.widgetmicroservice.widgetsummary.services.WidgetSummaryService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringRunner.class)
@@ -22,10 +35,26 @@ public class WidgetSummaryControllerTest {
     private WidgetSummaryService widgetService;
 
     @Test
-    public void getAllWidgetSummaries_HappyPath(){
+    public void getAllWidgetSummaries_HappyPath() throws Exception {
         // given
+        ProcessedWidget expected = new ProcessedWidget(1L, "Bob", "Smith", 20, Gender.MALE, 150.0, 80.0, 1643);
+        when(widgetService.getAllWidgetSummaries()).thenReturn(List.of(expected));
+
         // when
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/summary").contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].firstName", is("Bob")))
+                .andExpect(jsonPath("$[0].lastName", is("Smith")))
+                .andExpect(jsonPath("$[0].age", is(20)))
+                .andExpect(jsonPath("$[0].gender", is("MALE")))
+                .andExpect(jsonPath("$[0].height", is(150.0)))
+                .andExpect(jsonPath("$[0].weight", is(80.0)))
+                .andExpect(jsonPath("$[0].bmr", is(1643)));
         // then
+        verify(widgetService, times(1)).getAllWidgetSummaries();
     }
 
     @Test
@@ -48,6 +77,4 @@ public class WidgetSummaryControllerTest {
         // when
         // then
     }
-
-
 }
