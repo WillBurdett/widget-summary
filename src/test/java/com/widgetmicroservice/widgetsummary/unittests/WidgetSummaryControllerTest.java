@@ -4,6 +4,7 @@ import com.widgetmicroservice.widgetsummary.controllers.WidgetSummaryController;
 import com.widgetmicroservice.widgetsummary.enums.Gender;
 import com.widgetmicroservice.widgetsummary.models.ProcessedWidget;
 import com.widgetmicroservice.widgetsummary.services.WidgetSummaryService;
+import com.widgetmicroservice.widgetsummary.utils.JsonUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -82,10 +85,13 @@ public class WidgetSummaryControllerTest {
     }
 
     @Test
-    public void createWidgetSummary_HappyPath(){
+    public void createWidgetSummary_HappyPath() throws Exception {
         // given
+        ProcessedWidget expected = new ProcessedWidget(1L, "Bob", "Smith", 20, Gender.MALE, 150.0, 80.0, 1643);
         // when
+        mockMvc.perform(post("/summary").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(expected)));
         // then
+        verify(widgetService, times(1)).createWidgetSummary(expected);
     }
 
     @Test
