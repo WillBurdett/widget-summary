@@ -15,13 +15,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -95,9 +95,12 @@ public class WidgetSummaryControllerTest {
     }
 
     @Test
-    public void deleteWidgetSummaryById_HappyPath(){
+    public void deleteWidgetSummaryById_HappyPath() throws Exception {
         // given
+        Long id = 1L;
         // when
+        mockMvc.perform(delete("/summary/" + id));
         // then
+        verify(widgetService, times(1)).deleteWidgetSummaryById(id);
     }
 }
